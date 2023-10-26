@@ -1,0 +1,48 @@
+name: Javascript CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    name: Javascript CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Cache dependencies
+        id: cached-yarn-dependencies
+        uses: actions/cache@v3
+        with:
+          path: javascript/node_modules
+          key: 16.x-${{ runner.OS }}-build-${{ hashFiles('javascript/yarn.lock') }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        if: steps.cached-yarn-dependencies.outputs.cache-hit != 'true'
+        run: |
+          yarn
+        working-directory: javascript
+
+      - name: Typecheck
+        run: |
+          yarn test:api
+        working-directory: javascript
+
+      - name: Build
+        run: |
+          yarn build
+        working-directory: javascript
+
+      - name: Test
+        run: |
+          yarn test
+        working-directory: javascript
