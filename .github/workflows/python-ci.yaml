@@ -40,7 +40,7 @@ jobs:
 
       - name: Typecheck
         run: |
-          poetry run mypy rtsdkdev
+          poetry run mypy retoolrpc
         working-directory: python
 
       - name: Build
