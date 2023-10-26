@@ -1,0 +1,54 @@
+name: Python CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    name: Python CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Load cached dependencies
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('python/poetry.lock') }}
+
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+        working-directory: python
+
+      - name: Lint
+        run: |
+          poetry run ruff check .
+        working-directory: python
+
+      - name: Typecheck
+        run: |
+          poetry run mypy rtsdkdev
+        working-directory: python
+
+      - name: Build
+        run: |
+          poetry build
+        working-directory: python
+
+      - name: Test
+        run: |
+          poetry run pytest
+        working-directory: python
