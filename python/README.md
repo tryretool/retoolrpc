@@ -35,7 +35,7 @@ async def start_rpc():
   rpc = RetoolRPC(rpc_config)
 
   def helloWorld(args, context):
-      return f"Hello {args['name']}"
+      return f"Hello {args['name']}!"
 
   rpc.register(
       {

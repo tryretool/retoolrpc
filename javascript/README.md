@@ -4,7 +4,7 @@ Review Retool's [RPC documentation](https://docs.retool.com/docs/retool-rpc) bef
 
 ## Installation
 
-You can use `npm` or `yarn` or `pnpm` to install the package.
+You can use `npm`, `yarn`, or `pnpm` to install the package.
 
 ### npm
 
