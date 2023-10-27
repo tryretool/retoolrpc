@@ -1,31 +1,51 @@
-# `retoolrpc` Javascript Client Package
+# `retoolrpc` JavaScript client package
 
-Welcome to the `retoolrpc` client package! This package serves as the client-side component for the `retoolrpc` project. For detailed information and usage instructions, please refer to our official documentation.
+Review Retool's [RPC documentation](https://docs.retool.com/docs/retool-rpc) before installing the JavaScript package.
 
-## About `retoolrpc`
+## Installation
 
-Retool RPC (Remote Procedure Call) is a fast, secure solution for connecting your own codebase to Retool. You define functions in your backend and then call them from Retool apps using a Retool RPC resource.
+You can use `npm` or `yarn` or `pnpm` to install the package.
 
-## Documentation
+### npm
 
-For more detailed information, examples, and usage guidelines, please refer to our official documentation. The documentation provides in-depth insights into the `retoolrpc` client package, including installation instructions and comprehensive usage guides.
+```
+# Using npm
+npm install retoolrpc
 
-[Link to Documentation](https://docs.retool.com/retool-rpc)
+# Using yarn
+yarn add retoolrpc
 
-## Getting Started
+# Using pnpm
+pnpm add retoolrpc
+```
 
-To get started with the `retoolrpc` client package, please consult our documentation, which provides step-by-step instructions and examples to help you integrate and use this package effectively in your projects.
+## Usage example
 
-## Issues and Support
+```javascript
+import { RetoolRPC } from 'retoolrpc'
 
-If you encounter any issues, have questions, or need assistance, please feel free to reach out to our support team or report issues on our GitHub repository.
+const rpc = new RetoolRPC({
+  apiToken: 'your-api-token-here', // Replace this token with your API token
+  host: 'http://localhost:3000/', // Replace this host with your host
+  resourceId: 'resource-id', // Replace this resource ID with your ID
+  environmentName: 'production', // Replace this environment name with your name (defaults to production)
+  pollingIntervalMs: 1000, // The polling interval for the RPC
+  version: '0.0.1', // An optional version number for functions schemas
+  logLevel: 'info', // Change to 'debug' for verbose logging
+})
 
-[Link to GitHub Repository](https://github.com/tryretool/retoolrpc)
+rpc.register({
+  name: 'helloWorld',
+  arguments: {
+    name: { type: 'string', description: 'Your name', required: true },
+  },
+  implementation: async (args, context) => {
+    return {
+      message: `Hello ${args.name}!`,
+      context,
+    }
+  },
+})
 
-## License
-
-This project is licensed under the MIT License. Please refer to the LICENSE file in this repository for more details.
-
----
-
-Feel free to replace the placeholders with the actual links and relevant information for your project. This README section provides a clear introduction to the `retoolrpc` client package and directs users to your official documentation and support channels.
+await rpc.listen()
+```
