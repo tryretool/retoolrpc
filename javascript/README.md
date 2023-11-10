@@ -52,6 +52,26 @@ rpc.register({
 await rpc.listen()
 ```
 
+The function [`register`](https://github.com/tryretool/retoolrpc/blob/main/javascript/src/types.ts#L71-L85) accepts the following args
+```javascript
+{
+  /** The name of the function. */
+  name: string
+  /** The arguments of the function. */
+  arguments: Pick<TArgs, keyof TArgs>
+  /** The implementation of the function. */
+  implementation: (args: TransformedArguments<TArgs>, context: RetoolContext) => Promise<any>
+  /** The permissions configuration for the function. */
+  permissions?: {
+    /** The list of group names that have permission to execute the function. */
+    groupNames?: string[]
+    /** The list of user emails that have permission to execute the function. */
+    userEmails?: string[]
+  }
+}
+```
+Each [argument](https://github.com/tryretool/retoolrpc/blob/main/javascript/src/types.ts#L26-L39) of the registered function can be of the following type: string, number, boolean, dictionary, and generic JSON.
+
 ## ORM Support
 
 For users of [Sequelize](https://sequelize.org/), we offer an ORM mixin that enables the addition of fundamental model functions with a single function call, `registerModel`. When you register a model with `rpc`, it automatically registers various remote functions for the model, including `create`, `update`, `createOrUpdate`, `findByPk`, `findBy`, and `findAll`. You can find additional details [here](https://github.com/tryretool/retoolrpc/blob/main/javascript/src/addons/sequelize.ts#L5-L14).
