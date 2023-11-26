@@ -1,5 +1,5 @@
 import { AgentServerStatus } from '../types'
-import { Logger } from './logger'
+import type { LoggerService } from './logger'
 
 const CONNECTION_ERROR_INITIAL_TIMEOUT_MS = 50
 const CONNECTION_ERROR_RETRY_MAX_MS = 1000 * 60 * 10 // 10 minutes
@@ -12,7 +12,7 @@ function sleep(ms: number): Promise<void> {
 
 export async function loopWithBackoff(
   pollingIntervalMs: number,
-  logger: Logger,
+  logger: LoggerService,
   callback: () => Promise<AgentServerStatus>,
 ): Promise<AgentServerStatus> {
   let delayTimeMs = CONNECTION_ERROR_INITIAL_TIMEOUT_MS

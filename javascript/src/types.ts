@@ -1,3 +1,5 @@
+import type { LoggerService } from './utils/logger';
+
 /**
  * Configuration options for the Retool RPC.
  */
@@ -21,6 +23,8 @@ export type RetoolRPCConfig = {
   agentUuid?: string
   /** The optional log level. */
   logLevel?: 'debug' | 'info' | 'warn' | 'error'
+  /** The optional logger. */
+  logger?: LoggerService
 }
 
 /** Represents the type of the argument. Right now we are supporting only string, boolean, number, dict, and json. */

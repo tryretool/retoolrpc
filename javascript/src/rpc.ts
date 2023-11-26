@@ -13,7 +13,7 @@ import { createAgentServerError, FunctionNotFoundError } from './utils/errors'
 import { parseFunctionArguments } from './utils/schema'
 import { isClientError } from './utils/helpers'
 import { loopWithBackoff } from './utils/polling'
-import { Logger } from './utils/logger'
+import { Logger, LoggerService } from './utils/logger';
 import { RetoolAPI } from './utils/api'
 import { RetoolRPCVersion } from './version'
 
@@ -36,7 +36,7 @@ export class RetoolRPC {
   private _versionHash: string | undefined
   private _functions: Record<string, Omit<RegisterFunctionSpec<any>, 'name'>> = {}
   private _retoolApi: RetoolAPI
-  private _logger: Logger
+  private _logger: LoggerService
 
   /**
    * Creates an instance of the RetoolRPC class.
@@ -53,7 +53,7 @@ export class RetoolRPC {
     this._agentUuid = config.agentUuid || uuidv4()
 
     this._retoolApi = new RetoolAPI({ hostUrl: this._hostUrl, apiKey: this._apiKey })
-    this._logger = new Logger({ logLevel: config.logLevel })
+    this._logger = config.logger ?? new Logger({ logLevel: config.logLevel })
 
     this._logger.debug('Retool RPC Configuration', {
       apiKey: this._apiKey,
