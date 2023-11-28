@@ -12,11 +12,9 @@ type LoggerOptions = {
   logLevel?: LogLevel
 }
 
-interface LogFn {
-  (...messages: any[]): void;
-}
+type LogFn = (...messages: unknown[]) => void
 
-export type LoggerService = Record<LogLevel, LogFn>;
+export type LoggerService = Record<LogLevel, LogFn>
 
 export class Logger implements LoggerService {
   private currentLogLevel: LogLevel
@@ -29,25 +27,25 @@ export class Logger implements LoggerService {
     return LOG_LEVEL_RANKINGS[level] >= LOG_LEVEL_RANKINGS[this.currentLogLevel] && process.env.NODE_ENV !== 'test'
   }
 
-  debug(...messages: any[]) {
+  debug(...messages: unknown[]) {
     if (this.shouldLog('debug')) {
       console.log(...messages)
     }
   }
 
-  info(...messages: any[]) {
+  info(...messages: unknown[]) {
     if (this.shouldLog('info')) {
       console.log(...messages)
     }
   }
 
-  warn(...messages: any[]) {
+  warn(...messages: unknown[]) {
     if (this.shouldLog('warn')) {
       console.log(...messages)
     }
   }
 
-  error(...messages: any[]) {
+  error(...messages: unknown[]) {
     if (this.shouldLog('error')) {
       console.log(...messages)
     }
