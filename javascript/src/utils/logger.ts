@@ -12,7 +12,13 @@ type LoggerOptions = {
   logLevel?: LogLevel
 }
 
-export class Logger {
+interface LogFn {
+  (...messages: any[]): void;
+}
+
+export type LoggerService = Record<LogLevel, LogFn>;
+
+export class Logger implements LoggerService {
   private currentLogLevel: LogLevel
 
   constructor(options: LoggerOptions) {
