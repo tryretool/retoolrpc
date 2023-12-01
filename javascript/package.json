@@ -2,6 +2,16 @@
   "name": "retoolrpc",
   "version": "0.1.1",
   "description": "TypeScript package for Retool RPC",
+  "keywords": [],
+  "homepage": "https://github.com/tryretool/retoolrpc#readme",
+  "bugs": {
+    "url": "https://github.com/tryretool/retoolrpc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tryretool/retoolrpc.git"
+  },
+  "license": "MIT",
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -9,12 +19,24 @@
     },
     "./package.json": "./package.json"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tryretool/retoolrpc.git"
+  "scripts": {
+    "build": "yarn build:cjs && yarn build:esm",
+    "build:cjs": "cross-env MODE=cjs rollup -c",
+    "build:esm": "rollup -c",
+    "bumpVersion": "ts-node scripts/bumpVersion.ts",
+    "example": "nodemon -V -L --watch src -e ts example.ts",
+    "release": "yarn build && npm publish --access public",
+    "test": "vitest",
+    "test:api": "tsc --project tsconfig.json"
   },
-  "license": "MIT",
-  "keywords": [],
+  "dependencies": {
+    "@types/node-fetch": "^2.6.4",
+    "@types/uuid": "^9.0.2",
+    "abort-controller": "^3.0.0",
+    "node-fetch": "^2.6",
+    "ts-dedent": "^2.2.0",
+    "uuid": "^9.0.0"
+  },
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.2.0",
     "@types/fs-extra": "^11.0.1",
@@ -31,27 +53,5 @@
     "tslib": "^2.1.0",
     "typescript": "5.2.2",
     "vitest": "^0.34.5"
-  },
-  "dependencies": {
-    "@types/node-fetch": "^2.6.4",
-    "@types/uuid": "^9.0.2",
-    "abort-controller": "^3.0.0",
-    "node-fetch": "^2.6",
-    "ts-dedent": "^2.2.0",
-    "uuid": "^9.0.0"
-  },
-  "scripts": {
-    "build:cjs": "cross-env MODE=cjs rollup -c",
-    "build:esm": "rollup -c",
-    "build": "yarn build:cjs && yarn build:esm",
-    "example": "nodemon -V -L --watch src -e ts example.ts",
-    "bumpVersion": "ts-node scripts/bumpVersion.ts",
-    "release": "yarn build && npm publish --access public",
-    "test": "vitest",
-    "test:api": "tsc --project tsconfig.json"
-  },
-  "homepage": "https://github.com/tryretool/retoolrpc#readme",
-  "bugs": {
-    "url": "https://github.com/tryretool/retoolrpc/issues"
   }
 }
