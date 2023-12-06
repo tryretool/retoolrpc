@@ -10,17 +10,6 @@ import { Arguments } from './types'
 import { parseFunctionArguments } from './utils/schema'
 import { RetoolRPCVersion } from './version'
 
-// Expose the protected methods for testing
-class TestRetoolRPC extends RetoolRPC {
-  public testRegisterAgent() {
-    return this.protectedRegisterAgent()
-  }
-
-  public testFetchQueryAndExecute() {
-    return this.protectedFetchQueryAndExecute()
-  }
-}
-
 describe('RetoolRPC', () => {
   const CURRENT_DATE = new Date(2012, 12, 21)
   const resourceId = uuidv4()
@@ -47,7 +36,7 @@ describe('RetoolRPC', () => {
     vi.resetAllMocks()
   })
 
-  const rpcAgent = new TestRetoolRPC({
+  const rpcAgent = new RetoolRPC({
     apiToken: 'secret-api-token',
     host,
     resourceId,
@@ -106,7 +95,8 @@ describe('RetoolRPC', () => {
     beforeEach(async () => {
       nock(host).post('/api/v1/retoolrpc/registerAgent').reply(200, { versionHash })
 
-      await rpcAgent.testRegisterAgent()
+      // @ts-expect-error: private method in test
+      await rpcAgent.registerAgent()
     })
 
     test('should "continue" if popQuery has no query', async () => {
@@ -114,7 +104,8 @@ describe('RetoolRPC', () => {
         .post('/api/v1/retoolrpc/popQuery', JSON.stringify(popQueryRequestBody))
         .reply(200, { query: null })
 
-      const result = await rpcAgent.testFetchQueryAndExecute()
+      // @ts-expect-error: private method in test
+      const result = await rpcAgent.fetchQueryAndExecute()
 
       expect(nockScope.isDone()).toBe(true)
       expect(result).toEqual('continue')
@@ -168,7 +159,8 @@ describe('RetoolRPC', () => {
         )
         .reply(200, { success: true })
 
-      const result = await rpcAgent.testFetchQueryAndExecute()
+      // @ts-expect-error: private method in test
+      const result = await rpcAgent.fetchQueryAndExecute()
 
       expect(nockScope1.isDone()).toBe(true)
       expect(nockScope2.isDone()).toBe(true)
@@ -220,7 +212,8 @@ describe('RetoolRPC', () => {
         )
         .reply(200, { success: true })
 
-      const result = await rpcAgent.testFetchQueryAndExecute()
+      // @ts-expect-error: private method in test
+      const result = await rpcAgent.fetchQueryAndExecute()
 
       expect(nockScope1.isDone()).toBe(true)
       expect(nockScope2.isDone()).toBe(true)

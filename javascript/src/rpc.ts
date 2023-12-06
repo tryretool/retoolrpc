@@ -245,18 +245,4 @@ export class RetoolRPC {
 
     return 'continue'
   }
-
-  /**
-   * Export registerAgent as a protected method for testing purpose only. Lookup TestRetoolRPC for usage.
-   */
-  protected async protectedRegisterAgent() {
-    return this.registerAgent()
-  }
-
-  /**
-   * Export fetchQueryAndExecute as a protected method for testing purpose only. Lookup TestRetoolRPC for usage.
-   */
-  protected async protectedFetchQueryAndExecute() {
-    return this.fetchQueryAndExecute()
-  }
 }
