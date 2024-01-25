@@ -13,12 +13,13 @@ import { createAgentServerError, FunctionNotFoundError } from './utils/errors'
 import { parseFunctionArguments } from './utils/schema'
 import { isClientError } from './utils/helpers'
 import { loopWithBackoff } from './utils/polling'
-import { Logger, LoggerService } from './utils/logger';
+import { Logger, LoggerService } from './utils/logger'
 import { RetoolAPI } from './utils/api'
 import { RetoolRPCVersion } from './version'
 
 const MINIMUM_POLLING_INTERVAL_MS = 100
 const DEFAULT_POLLING_INTERVAL_MS = 1000
+const DEFAULT_POLLING_TIMEOUT_MS = 5000
 const DEFAULT_ENVIRONMENT_NAME = 'production'
 const DEFAULT_VERSION = '0.0.1'
 
@@ -31,6 +32,7 @@ export class RetoolRPC {
   private _resourceId: string
   private _environmentName: string
   private _pollingIntervalMs: number
+  private _pollingTimeoutMs: number
   private _version: string
   private _agentUuid: string
   private _versionHash: string | undefined
@@ -49,10 +51,15 @@ export class RetoolRPC {
     this._pollingIntervalMs = config.pollingIntervalMs
       ? Math.max(config.pollingIntervalMs, MINIMUM_POLLING_INTERVAL_MS)
       : DEFAULT_POLLING_INTERVAL_MS
+    this._pollingTimeoutMs = config.pollingTimeoutMs || DEFAULT_POLLING_TIMEOUT_MS
     this._version = config.version || DEFAULT_VERSION
     this._agentUuid = config.agentUuid || uuidv4()
 
-    this._retoolApi = new RetoolAPI({ hostUrl: this._hostUrl, apiKey: this._apiKey })
+    this._retoolApi = new RetoolAPI({
+      hostUrl: this._hostUrl,
+      apiKey: this._apiKey,
+      pollingTimeoutMs: this._pollingTimeoutMs || DEFAULT_POLLING_TIMEOUT_MS,
+    })
     this._logger = config.logger ?? new Logger({ logLevel: config.logLevel })
 
     this._logger.debug('Retool RPC Configuration', {

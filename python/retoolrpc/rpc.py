@@ -21,6 +21,7 @@ from retoolrpc.version import __version__
 
 MINIMUM_POLLING_INTERVAL_MS = 100
 DEFAULT_POLLING_INTERVAL_MS = 1000
+DEFAULT_POLLING_TIMEOUT_MS = 5000
 DEFAULT_ENVIRONMENT_NAME = "production"
 DEFAULT_VERSION = "0.0.1"
 
@@ -38,10 +39,17 @@ class RetoolRPC:
             config.polling_interval_ms or DEFAULT_POLLING_INTERVAL_MS,
             MINIMUM_POLLING_INTERVAL_MS,
         )
+        self._polling_timeout_ms = (
+            config.polling_timeout_ms or DEFAULT_POLLING_TIMEOUT_MS
+        )
         self._version = config.version or DEFAULT_VERSION
         self._agent_uuid = config.agent_uuid or str(uuid.uuid4())
 
-        self._retool_api = RetoolAPI(host_url=self._host_url, api_key=self._api_key)
+        self._retool_api = RetoolAPI(
+            host_url=self._host_url,
+            api_key=self._api_key,
+            polling_timeout_ms=self._polling_timeout_ms,
+        )
         self._logger = Logger(log_level=config.log_level)
 
         self._logger.debug(

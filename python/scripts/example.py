@@ -14,6 +14,7 @@ async def run_rpc():
         resource_id="resource-uuid",  # replace with retool rpc resource id
         environment_name="production",
         polling_interval_ms=1000,
+        polling_timeout_ms=5000,
         log_level="info",
     )
 
