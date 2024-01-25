@@ -32,6 +32,7 @@ const rpc = new RetoolRPC({
   resourceId: 'resource-id', // Replace this resource ID with your ID
   environmentName: 'production', // Replace this environment name with your name (defaults to production)
   pollingIntervalMs: 1000, // The polling interval for the RPC
+  pollingTimeoutMs: 5000, // The polling timeout for the RPC
   version: '0.0.1', // An optional version number for functions schemas
   logLevel: 'info', // Change to 'debug' for verbose logging or use own logger implementation by passing a logger param
 })
@@ -57,6 +58,7 @@ await rpc.listen()
 For users of [Sequelize](https://sequelize.org/), we offer an ORM mixin that enables the addition of fundamental model functions with a single function call, `registerModel`. When you register a model with `rpc`, it automatically registers various remote functions for the model, including `create`, `update`, `createOrUpdate`, `findByPk`, `findBy`, and `findAll`. You can find additional details [here](https://github.com/tryretool/retoolrpc/blob/main/javascript/src/addons/sequelize.ts#L5-L14).
 
 Following is an example of registering a `User` model:
+
 ```javascript
 import { RetoolRPC, sequelizeMixin } from 'retoolrpc'
 import { User } from './orm/models' // the path to your model may be different

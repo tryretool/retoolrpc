@@ -4,9 +4,6 @@ import httpx
 from retoolrpc.utils.types import AgentServerError
 from retoolrpc.version import __version__
 
-# Defining constants and types
-POLLING_TIMEOUT_MS = 5 * 1000  # 5 seconds
-
 
 class PopQueryRequest(TypedDict):
     """
@@ -60,12 +57,13 @@ class PostQueryResponseRequest(TypedDict):
 
 
 class RetoolAPI:
-    def __init__(self, host_url: str, api_key: str) -> None:
+    def __init__(self, host_url: str, api_key: str, polling_timeout_ms: int) -> None:
         """
         Initialize the RetoolAPI with given host_url and api_key.
         """
         self._host_url = host_url
         self._api_key = api_key
+        self._polling_timeput_ms = polling_timeout_ms
 
     async def pop_query(self, options: PopQueryRequest) -> httpx.Response:
         headers = {
@@ -79,12 +77,14 @@ class RetoolAPI:
                     url=f"{self._host_url}/api/v1/retoolrpc/popQuery",
                     headers=headers,
                     json=options,
-                    timeout=POLLING_TIMEOUT_MS / 1000,  # Convert to seconds
+                    timeout=self._polling_timeput_ms / 1000,  # Convert to seconds
                 )
                 response.raise_for_status()
                 return response
         except httpx.TimeoutException as err:
-            raise TimeoutError(f"Polling timeout after {POLLING_TIMEOUT_MS}ms") from err
+            raise TimeoutError(
+                f"Polling timeout after {self._polling_timeput_ms}ms"
+            ) from err
         except Exception as err:
             raise err
 

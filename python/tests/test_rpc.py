@@ -48,6 +48,7 @@ def rpc_agent():
             environment_name=ENVIRONMENT_NAME,
             agent_uuid=AGENT_UUID,
             polling_interval_ms=1000,
+            polling_timeout_ms=5000,
             version="0.0.1",
         )
     )

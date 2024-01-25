@@ -15,6 +15,7 @@ const rpc = new RetoolRPC({
   resourceId: 'resource-uuid', // create a Retool RPC resource and copy its ID here
   environmentName: 'production',
   pollingIntervalMs: 1000,
+  pollingTimeoutMs: 5000,
   logLevel: 'info',
 })
 

@@ -8,8 +8,6 @@ const AbortController = globalThis.AbortController || AbortControllerFallback
 import { AgentServerError } from '../types'
 import { RetoolRPCVersion } from '../version'
 
-const POLLING_TIMEOUT_MS = 5 * 1000 // 5 seconds
-
 type PopQueryRequest = {
   resourceId: string
   environmentName: string
@@ -46,17 +44,19 @@ type PostQueryResponseRequest = {
 export class RetoolAPI {
   private _hostUrl: string
   private _apiKey: string
+  private _pollingTimeoutMs: number
 
-  constructor({ hostUrl, apiKey }: { hostUrl: string; apiKey: string }) {
+  constructor({ hostUrl, apiKey, pollingTimeoutMs }: { hostUrl: string; apiKey: string; pollingTimeoutMs: number }) {
     this._hostUrl = hostUrl
     this._apiKey = apiKey
+    this._pollingTimeoutMs = pollingTimeoutMs
   }
 
   async popQuery(options: PopQueryRequest) {
     const abortController = new AbortController()
     setTimeout(() => {
       abortController.abort()
-    }, POLLING_TIMEOUT_MS)
+    }, this._pollingTimeoutMs)
 
     try {
       return await fetch(`${this._hostUrl}/api/v1/retoolrpc/popQuery`, {
@@ -73,7 +73,7 @@ export class RetoolAPI {
       })
     } catch (error: any) {
       if (abortController.signal.aborted) {
-        throw new Error(`Polling timeout after ${POLLING_TIMEOUT_MS}ms`)
+        throw new Error(`Polling timeout after ${this._pollingTimeoutMs}ms`)
       }
       throw error
     }

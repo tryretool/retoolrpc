@@ -43,6 +43,7 @@ describe('RetoolRPC', () => {
     environmentName,
     agentUuid,
     pollingIntervalMs: 1000,
+    pollingTimeoutMs: 5000,
     version: '0.0.1',
   })
 
