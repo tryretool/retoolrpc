@@ -27,6 +27,8 @@ export default {
     {
       dir: isCJSBuild ? 'dist/cjs' : 'dist',
       format: isCJSBuild ? 'cjs' : 'esm',
+      entryFileNames: isCJSBuild ? '[name].js' : '[name].mjs', // Output file name pattern
+      chunkFileNames: isCJSBuild ? '[name]-[hash].js' : '[name]-[hash].mjs', // For code splitting
     },
   ],
   plugins: [ts({ tsconfig: isCJSBuild ? 'tsconfig.cjs.json' : 'tsconfig.json' }), commonjsPkgJSONPlugin()],
