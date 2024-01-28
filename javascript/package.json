@@ -14,7 +14,7 @@
   "license": "MIT",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
+      "import": "./dist/index.mjs",
       "require": "./dist/cjs/index.js"
     },
     "./package.json": "./package.json"
