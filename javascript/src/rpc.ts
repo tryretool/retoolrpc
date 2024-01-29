@@ -228,29 +228,34 @@ export class RetoolRPC {
           status = 'error'
         })
         .finally(async () => {
-          const updateQueryResponse = await this._retoolApi.postQueryResponse({
-            resourceId: this._resourceId,
-            environmentName: this._environmentName,
-            versionHash: this._versionHash,
-            agentUuid: this._agentUuid,
-            queryUuid,
-            status,
-            data: executionResponse,
-            metadata: {
-              packageLanguage: 'javascript',
-              packageVersion: RetoolRPCVersion,
-              agentReceivedQueryAt,
-              agentFinishedQueryAt: new Date().toISOString(),
-              parameters: executionArguments,
-            },
-            error: agentError,
-          })
-
-          this._logger.debug(
-            'Update query response status: ',
-            updateQueryResponse.status,
-            await updateQueryResponse.text(),
-          )
+          this._retoolApi
+            .postQueryResponse({
+              resourceId: this._resourceId,
+              environmentName: this._environmentName,
+              versionHash: this._versionHash,
+              agentUuid: this._agentUuid,
+              queryUuid,
+              status,
+              data: executionResponse,
+              metadata: {
+                packageLanguage: 'javascript',
+                packageVersion: RetoolRPCVersion,
+                agentReceivedQueryAt,
+                agentFinishedQueryAt: new Date().toISOString(),
+                parameters: executionArguments,
+              },
+              error: agentError,
+            })
+            .then(async (updateQueryResponse) => {
+              this._logger.debug(
+                'Update query response status: ',
+                updateQueryResponse.status,
+                await updateQueryResponse.text(),
+              )
+            })
+            .catch((err) => {
+              this._logger.error(`Error updating query response: `, err)
+            })
         })
     }
 
