@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "retoolrpc"
-version = "0.1.0"
+version = "0.1.2"
 description = "Python package for Retool RPC"
 authors = ["tryretool <developer-api@retool.com>"]
 license = "MIT"
