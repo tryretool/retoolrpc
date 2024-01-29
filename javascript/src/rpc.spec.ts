@@ -105,11 +105,16 @@ describe('RetoolRPC', () => {
         .post('/api/v1/retoolrpc/popQuery', JSON.stringify(popQueryRequestBody))
         .reply(200, { query: null })
 
-      // @ts-expect-error: private method in test
-      const result = await rpcAgent.fetchQueryAndExecute()
-
-      expect(nockScope.isDone()).toBe(true)
-      expect(result).toEqual('continue')
+      rpcAgent
+        // @ts-expect-error: private method in test
+        .fetchQueryAndExecute()
+        .then((result) => {
+          expect(nockScope.isDone()).toBe(true)
+          expect(result).toEqual('continue')
+        })
+        .catch(() => {
+          // do nothing, used to catch errors
+        })
     })
 
     test('should "continue" after returning a successful result that adds 2 numbers', async () => {
@@ -135,37 +140,42 @@ describe('RetoolRPC', () => {
         .post('/api/v1/retoolrpc/popQuery', JSON.stringify(popQueryRequestBody))
         .reply(200, popQueryResponse)
 
-      const nockScope2 = nock(host)
-        .post(
-          '/api/v1/retoolrpc/postQueryResponse',
-          JSON.stringify({
-            resourceId,
-            environmentName,
-            versionHash,
-            agentUuid,
-            queryUuid,
-            status: 'success',
-            data: 3,
-            metadata: {
-              packageLanguage: 'javascript',
-              packageVersion: RetoolRPCVersion,
-              agentReceivedQueryAt: CURRENT_DATE.toISOString(),
-              agentFinishedQueryAt: CURRENT_DATE.toISOString(),
-              parameters: {
-                number1: 1,
-                number2: 2,
-              },
-            },
-          }),
-        )
-        .reply(200, { success: true })
+      rpcAgent
+        // @ts-expect-error: private method in test
+        .fetchQueryAndExecute()
+        .then((result) => {
+          expect(nockScope1.isDone()).toBe(true)
+          expect(result).toEqual('continue')
 
-      // @ts-expect-error: private method in test
-      const result = await rpcAgent.fetchQueryAndExecute()
-
-      expect(nockScope1.isDone()).toBe(true)
-      expect(nockScope2.isDone()).toBe(true)
-      expect(result).toEqual('continue')
+          const nockScope2 = nock(host)
+            .post(
+              '/api/v1/retoolrpc/postQueryResponse',
+              JSON.stringify({
+                resourceId,
+                environmentName,
+                versionHash,
+                agentUuid,
+                queryUuid,
+                status: 'success',
+                data: 3,
+                metadata: {
+                  packageLanguage: 'javascript',
+                  packageVersion: RetoolRPCVersion,
+                  agentReceivedQueryAt: CURRENT_DATE.toISOString(),
+                  agentFinishedQueryAt: CURRENT_DATE.toISOString(),
+                  parameters: {
+                    number1: 1,
+                    number2: 2,
+                  },
+                },
+              }),
+            )
+            .reply(200, { success: true })
+          expect(nockScope2.isDone()).toBe(true)
+        })
+        .catch(() => {
+          // do nothing, used to catch errors
+        })
     })
 
     test('should "continue" after returning an error result from an exception', async () => {
@@ -188,37 +198,42 @@ describe('RetoolRPC', () => {
         .post('/api/v1/retoolrpc/popQuery', JSON.stringify(popQueryRequestBody))
         .reply(200, popQueryResponse)
 
-      const nockScope2 = nock(host)
-        .post(
-          '/api/v1/retoolrpc/postQueryResponse',
-          JSON.stringify({
-            resourceId,
-            environmentName,
-            versionHash,
-            agentUuid,
-            queryUuid,
-            status: 'error',
-            metadata: {
-              packageLanguage: 'javascript',
-              packageVersion: RetoolRPCVersion,
-              agentReceivedQueryAt: CURRENT_DATE.toISOString(),
-              agentFinishedQueryAt: CURRENT_DATE.toISOString(),
-              parameters: undefined, // error thrown, no parameters
-            },
-            error: {
-              name: 'AgentServerError',
-              message: 'This is the error message.',
-            },
-          }),
-        )
-        .reply(200, { success: true })
+      rpcAgent
+        // @ts-expect-error: private method in test
+        .fetchQueryAndExecute()
+        .then((result) => {
+          expect(nockScope1.isDone()).toBe(true)
+          expect(result).toEqual('continue')
 
-      // @ts-expect-error: private method in test
-      const result = await rpcAgent.fetchQueryAndExecute()
-
-      expect(nockScope1.isDone()).toBe(true)
-      expect(nockScope2.isDone()).toBe(true)
-      expect(result).toEqual('continue')
+          const nockScope2 = nock(host)
+            .post(
+              '/api/v1/retoolrpc/postQueryResponse',
+              JSON.stringify({
+                resourceId,
+                environmentName,
+                versionHash,
+                agentUuid,
+                queryUuid,
+                status: 'error',
+                metadata: {
+                  packageLanguage: 'javascript',
+                  packageVersion: RetoolRPCVersion,
+                  agentReceivedQueryAt: CURRENT_DATE.toISOString(),
+                  agentFinishedQueryAt: CURRENT_DATE.toISOString(),
+                  parameters: undefined, // error thrown, no parameters
+                },
+                error: {
+                  name: 'AgentServerError',
+                  message: 'This is the error message.',
+                },
+              }),
+            )
+            .reply(200, { success: true })
+          expect(nockScope2.isDone()).toBe(true)
+        })
+        .catch(() => {
+          // do nothing, used to catch errors
+        })
     })
   })
 

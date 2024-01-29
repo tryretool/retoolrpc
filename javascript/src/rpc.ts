@@ -217,37 +217,46 @@ export class RetoolRPC {
       let executionArguments: Record<string, unknown> | undefined = undefined
       let agentError: AgentServerError | undefined = undefined
 
-      try {
-        const executionResult = await this.executeFunction(method, parameters, context)
-        executionResponse = executionResult.result
-        executionArguments = executionResult.arguments
-        status = 'success'
-      } catch (err: unknown) {
-        agentError = createAgentServerError(err)
-        status = 'error'
-      }
-
-      const agentFinishedQueryAt = new Date().toISOString()
-
-      const updateQueryResponse = await this._retoolApi.postQueryResponse({
-        resourceId: this._resourceId,
-        environmentName: this._environmentName,
-        versionHash: this._versionHash,
-        agentUuid: this._agentUuid,
-        queryUuid,
-        status,
-        data: executionResponse,
-        metadata: {
-          packageLanguage: 'javascript',
-          packageVersion: RetoolRPCVersion,
-          agentReceivedQueryAt,
-          agentFinishedQueryAt,
-          parameters: executionArguments,
-        },
-        error: agentError,
-      })
-
-      this._logger.debug('Update query response status: ', updateQueryResponse.status, await updateQueryResponse.text())
+      this.executeFunction(method, parameters, context)
+        .then((executionResult) => {
+          executionResponse = executionResult.result
+          executionArguments = executionResult.arguments
+          status = 'success'
+        })
+        .catch((err) => {
+          agentError = createAgentServerError(err)
+          status = 'error'
+        })
+        .finally(() => {
+          this._retoolApi
+            .postQueryResponse({
+              resourceId: this._resourceId,
+              environmentName: this._environmentName,
+              versionHash: this._versionHash,
+              agentUuid: this._agentUuid,
+              queryUuid,
+              status,
+              data: executionResponse,
+              metadata: {
+                packageLanguage: 'javascript',
+                packageVersion: RetoolRPCVersion,
+                agentReceivedQueryAt,
+                agentFinishedQueryAt: new Date().toISOString(),
+                parameters: executionArguments,
+              },
+              error: agentError,
+            })
+            .then(async (updateQueryResponse) => {
+              this._logger.debug(
+                'Update query response status: ',
+                updateQueryResponse.status,
+                await updateQueryResponse.text(),
+              )
+            })
+            .catch((err) => {
+              this._logger.error(`Error updating query response: `, err)
+            })
+        })
     }
 
     return 'continue'
