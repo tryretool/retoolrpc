@@ -217,17 +217,21 @@ export class RetoolRPC {
       let executionArguments: Record<string, unknown> | undefined = undefined
       let agentError: AgentServerError | undefined = undefined
 
+      console.log('here1')
       this.executeFunction(method, parameters, context)
         .then((executionResult) => {
+          console.log('here2')
           executionResponse = executionResult.result
           executionArguments = executionResult.arguments
           status = 'success'
         })
         .catch((err) => {
+          console.log('here3')
           agentError = createAgentServerError(err)
           status = 'error'
         })
         .finally(async () => {
+          console.log('here4')
           const updateQueryResponse = await this._retoolApi.postQueryResponse({
             resourceId: this._resourceId,
             environmentName: this._environmentName,
@@ -245,6 +249,7 @@ export class RetoolRPC {
             },
             error: agentError,
           })
+          // console.log({ updateQueryResponse, json: await updateQueryResponse.text() })
 
           this._logger.debug(
             'Update query response status: ',
