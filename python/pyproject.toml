@@ -1,12 +1,12 @@
 [build-system]
-requires = [ "poetry-core",]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "retoolrpc"
 version = "0.1.2"
 description = "Python package for Retool RPC"
-authors = [ "tryretool <developer-api@retool.com>",]
+authors = ["tryretool <developer-api@retool.com>"]
 license = "MIT"
 repository = "https://github.com/tryretool/retoolrpc"
 homepage = "https://retool.com"
@@ -18,7 +18,7 @@ include = "retoolrpc"
 preview = true
 
 [tool.ruff]
-src = [ "retoolrpc",]
+src = ["retoolrpc"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
