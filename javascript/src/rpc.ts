@@ -227,7 +227,7 @@ export class RetoolRPC {
           agentError = createAgentServerError(err)
           status = 'error'
         })
-        .finally(async () => {
+        .finally(() => {
           this._retoolApi
             .postQueryResponse({
               resourceId: this._resourceId,
