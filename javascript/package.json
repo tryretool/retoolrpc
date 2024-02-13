@@ -12,10 +12,14 @@
     "url": "git+https://github.com/tryretool/retoolrpc.git"
   },
   "license": "MIT",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
-      "require": "./dist/cjs/index.js"
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./package.json": "./package.json"
   },
