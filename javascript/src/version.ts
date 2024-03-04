@@ -1,1 +1,1 @@
-export const RetoolRPCVersion = '0.1.3'
+export const RetoolRPCVersion = '0.1.4'
