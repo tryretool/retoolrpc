@@ -36,7 +36,7 @@ export class RetoolRPC {
   private _version: string
   private _agentUuid: string
   private _versionHash: string | undefined
-  private _functions: Record<string, Omit<RegisterFunctionSpec<any>, 'name'>> = {}
+  private _functions: Record<string, Omit<RegisterFunctionSpec<any, any>, 'name'>> = {}
   private _retoolApi: RetoolAPI
   private _logger: LoggerService
 
@@ -89,12 +89,13 @@ export class RetoolRPC {
   /**
    * Registers a Retool function with the specified function definition.
    */
-  register<TArgs extends Arguments>(spec: RegisterFunctionSpec<TArgs>): void {
+  register<TArgs extends Arguments, TReturn>(spec: RegisterFunctionSpec<TArgs, TReturn>): RegisterFunctionSpec<TArgs, TReturn>['implementation'] {
     this._functions[spec.name] = {
       arguments: spec.arguments,
       permissions: spec.permissions,
       implementation: spec.implementation,
     }
+    return spec.implementation;
   }
 
   /**
@@ -145,7 +146,7 @@ export class RetoolRPC {
    * Registers the agent with the Retool server.
    */
   private async registerAgent(): Promise<AgentServerStatus> {
-    const functionsMetadata: Record<string, Pick<RegisterFunctionSpec<any>, 'arguments' | 'permissions'>> = {}
+    const functionsMetadata: Record<string, Pick<RegisterFunctionSpec<any, any>, 'arguments' | 'permissions'>> = {}
     for (const functionName in this._functions) {
       functionsMetadata[functionName] = {
         arguments: this._functions[functionName].arguments,

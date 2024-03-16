@@ -2,11 +2,11 @@ import fs from 'fs-extra'
 import nock from 'nock'
 import crypto from 'crypto'
 import { dedent } from 'ts-dedent'
-import { describe, expect, beforeEach, afterEach, test, vi } from 'vitest'
+import { describe, expect, beforeEach, afterEach, test, vi, expectTypeOf } from 'vitest'
 import { v4 as uuidv4 } from 'uuid'
 
 import { RetoolRPC } from './rpc'
-import { Arguments } from './types'
+import { Arguments, RetoolContext, TransformedArguments } from './types'
 import { parseFunctionArguments } from './utils/schema'
 import { RetoolRPCVersion } from './version'
 
@@ -751,6 +751,25 @@ describe('RetoolRPC', () => {
       )
     })
   })
+
+  test('returns the implementation when registering', async () => {
+    const fn = rpcAgent.register({
+      name: 'test',
+      arguments: {},
+      implementation: async () => {
+        return 1
+      }
+    })
+
+    type ExpectedImplementation = (args: TransformedArguments<Arguments>, context: RetoolContext) => Promise<number>
+    expectTypeOf(fn).toEqualTypeOf<ExpectedImplementation>()
+    
+
+    const result = await fn({}, context);
+    expect(result).toEqual(1)
+    expectTypeOf(result).toEqualTypeOf(1)
+  })
+
 })
 
 describe('RetoolRPCVersion', () => {

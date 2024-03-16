@@ -74,13 +74,13 @@ export type TransformedArguments<TArgs extends Arguments> = {
 }
 
 /** Represents the specification for registering a Retool function. */
-export type RegisterFunctionSpec<TArgs extends Arguments> = {
+export type RegisterFunctionSpec<TArgs extends Arguments, TReturn> = {
   /** The name of the function. */
   name: string
   /** The arguments of the function. */
   arguments: Pick<TArgs, keyof TArgs>
   /** The implementation of the function. */
-  implementation: (args: TransformedArguments<TArgs>, context: RetoolContext) => Promise<any>
+  implementation: (args: TransformedArguments<TArgs>, context: RetoolContext) => Promise<TReturn>
   /** The permissions configuration for the function. */
   permissions?: {
     /** The list of group names that have permission to execute the function. */
