@@ -6,7 +6,8 @@ const CONNECTION_ERROR_RETRY_MAX_MS = 1000 * 60 * 10 // 10 minutes
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => {
-    setTimeout(resolve, ms)
+    const timeout = setTimeout(resolve, ms)
+    timeout.unref()
   })
 }
 
