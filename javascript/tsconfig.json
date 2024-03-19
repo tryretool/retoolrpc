@@ -11,7 +11,8 @@
     /* Additional Checks */
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "lib": ["ESNext"]
   },
   "ts-node": {
     // these options are overrides used only by ts-node
