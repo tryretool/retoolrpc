@@ -788,7 +788,7 @@ describe('RetoolRPC', () => {
 
     const result = await fn({}, context);
 
-    expectTypeOf(result).toEqualTypeOf<{ a?: number }>()
+    expectTypeOf(result.a).toEqualTypeOf<number | undefined>()
   })
 
 })
