@@ -777,9 +777,14 @@ describe('RetoolRPC', () => {
           type: 'number',
           required: false,
         },
+        b: {
+          type: 'number',
+          required: true,
+        }
       },
       implementation: async (args) => {
         expectTypeOf(args.a).toEqualTypeOf<number | undefined>()
+        expectTypeOf(args.b).toEqualTypeOf<number>()
 
         return args
       },
