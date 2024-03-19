@@ -771,7 +771,7 @@ describe('RetoolRPC', () => {
   })
 
   test('infers non-required properties as optional', async () => {
-    rpcAgent.register({
+    const fn = rpcAgent.register({
       name: 'test',
       arguments: {
         a: {
@@ -781,8 +781,14 @@ describe('RetoolRPC', () => {
       },
       implementation: async (args) => {
         expectTypeOf(args.a).toEqualTypeOf<number | undefined>()
+
+        return args;
       }
     })
+
+    const result = await fn({}, context);
+
+    expectTypeOf(result).toEqualTypeOf<{ a?: number }>()
   })
 
 })
