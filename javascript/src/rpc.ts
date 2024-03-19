@@ -89,13 +89,15 @@ export class RetoolRPC {
   /**
    * Registers a Retool function with the specified function definition.
    */
-  register<TArgs extends Arguments, TReturn>(spec: RegisterFunctionSpec<TArgs, TReturn>): RegisterFunctionSpec<TArgs, TReturn>['implementation'] {
+  register<TArgs extends Arguments, TReturn>(
+    spec: RegisterFunctionSpec<TArgs, TReturn>,
+  ): RegisterFunctionSpec<TArgs, TReturn>['implementation'] {
     this._functions[spec.name] = {
       arguments: spec.arguments,
       permissions: spec.permissions,
-      implementation: spec.implementation,
+      implementation: spec.implementation as RegisterFunctionSpec<any, any>['implementation'],
     }
-    return spec.implementation;
+    return spec.implementation
   }
 
   /**
