@@ -775,28 +775,31 @@ describe('RetoolRPC', () => {
       arguments: {
         explicitRequired: {
           type: 'number',
-          required: false,
+          required: true,
         },
         explicitOptional: {
           type: 'number',
-          required: true,
+          required: false,
         },
         implicitOptional: {
           type: 'number',
         },
       },
       implementation: async (args) => {
-        expectTypeOf(args.explicitRequired).toEqualTypeOf<number | undefined>()
-        expectTypeOf(args.explicitOptional).toEqualTypeOf<number>()
+        expectTypeOf(args.explicitRequired).toEqualTypeOf<number>()
+
+        expectTypeOf(args.explicitOptional).toEqualTypeOf<number | undefined>()
         expectTypeOf(args.implicitOptional).toEqualTypeOf<number | undefined>()
 
         return args
       },
     })
 
-    const result = await fn({}, context)
+    const result = await fn({
+      explicitRequired: 1,
+    }, context)
 
-    expectTypeOf(result.explicitRequired).toEqualTypeOf<number | undefined>()
+    expectTypeOf(result.explicitOptional).toEqualTypeOf<number | undefined>()
   })
 })
 
