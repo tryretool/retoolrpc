@@ -95,7 +95,7 @@ export class RetoolRPC {
     this._functions[spec.name] = {
       arguments: spec.arguments,
       permissions: spec.permissions,
-      implementation: spec.implementation,
+      implementation: spec.implementation as RegisterFunctionSpec<any, any>['implementation'],
     }
     return spec.implementation
   }
