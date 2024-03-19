@@ -773,18 +773,22 @@ describe('RetoolRPC', () => {
     const fn = rpcAgent.register({
       name: 'test',
       arguments: {
-        a: {
+        explicitRequired: {
           type: 'number',
           required: false,
         },
-        b: {
+        explicitOptional: {
           type: 'number',
           required: true,
-        }
+        },
+        implicitOptional: {
+          type: 'number',
+        },
       },
       implementation: async (args) => {
-        expectTypeOf(args.a).toEqualTypeOf<number | undefined>()
-        expectTypeOf(args.b).toEqualTypeOf<number>()
+        expectTypeOf(args.explicitRequired).toEqualTypeOf<number | undefined>()
+        expectTypeOf(args.explicitOptional).toEqualTypeOf<number>()
+        expectTypeOf(args.implicitOptional).toEqualTypeOf<number | undefined>()
 
         return args
       },
@@ -792,7 +796,7 @@ describe('RetoolRPC', () => {
 
     const result = await fn({}, context)
 
-    expectTypeOf(result.a).toEqualTypeOf<number | undefined>()
+    expectTypeOf(result.explicitRequired).toEqualTypeOf<number | undefined>()
   })
 })
 
