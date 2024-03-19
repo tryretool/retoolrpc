@@ -20,5 +20,5 @@
     "compilerOptions": {
       "module": "commonjs"
     }
-  },
+  }
 }

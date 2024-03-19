@@ -36,11 +36,17 @@ export type ArgumentType = 'string' | 'boolean' | 'number' | 'dict' | 'json'
 export type Argument = {
   /** The type of the argument. */
   type: ArgumentType
-  /** Specifies whether the argument is expected to be an array. */
+  /**
+   * Specifies whether the argument is expected to be an array.
+   * @default false
+   */
   array?: boolean
   /** The description of the argument. */
   description?: string
-  /** Specifies whether the argument is required. */
+  /**
+   * Specifies whether the argument is required.
+   * @default false
+   */
   required?: boolean
 }
 
@@ -68,10 +74,18 @@ export type TransformedArgument<TArg extends Argument> = TArg['array'] extends t
   ? Array<ArgumentTypeMap<TArg>>
   : ArgumentTypeMap<TArg>
 
+type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
+type GetOptionalArgs<TArgs extends Arguments> = {
+  [TArg in keyof TArgs]: TArgs[TArg]['required'] extends true ? never : TArg
+}[keyof TArgs]
+
 /** Represents a map of argument names to argument types. */
-export type TransformedArguments<TArgs extends Arguments> = {
-  [TArg in keyof TArgs]: TransformedArgument<TArgs[TArg]>
-}
+export type TransformedArguments<TArgs extends Arguments> = PartialBy<
+  {
+    [TArg in keyof TArgs]: TransformedArgument<TArgs[TArg]>
+  },
+  GetOptionalArgs<TArgs>
+>
 
 /** Represents the specification for registering a Retool function. */
 export type RegisterFunctionSpec<TArgs extends Arguments, TReturn> = {
