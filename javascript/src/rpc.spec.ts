@@ -758,14 +758,13 @@ describe('RetoolRPC', () => {
       arguments: {},
       implementation: async () => {
         return 1
-      }
+      },
     })
 
     type ExpectedImplementation = (args: TransformedArguments<Arguments>, context: RetoolContext) => Promise<number>
     expectTypeOf(fn).toEqualTypeOf<ExpectedImplementation>()
-    
 
-    const result = await fn({}, context);
+    const result = await fn({}, context)
     expect(result).toEqual(1)
     expectTypeOf(result).toEqualTypeOf(1)
   })
@@ -776,21 +775,20 @@ describe('RetoolRPC', () => {
       arguments: {
         a: {
           type: 'number',
-          required: false
-        }
+          required: false,
+        },
       },
       implementation: async (args) => {
         expectTypeOf(args.a).toEqualTypeOf<number | undefined>()
 
-        return args;
-      }
+        return args
+      },
     })
 
-    const result = await fn({}, context);
+    const result = await fn({}, context)
 
     expectTypeOf(result.a).toEqualTypeOf<number | undefined>()
   })
-
 })
 
 describe('RetoolRPCVersion', () => {
