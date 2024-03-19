@@ -795,9 +795,12 @@ describe('RetoolRPC', () => {
       },
     })
 
-    const result = await fn({
-      explicitRequired: 1,
-    }, context)
+    const result = await fn(
+      {
+        explicitRequired: 1,
+      },
+      context,
+    )
 
     expectTypeOf(result.explicitOptional).toEqualTypeOf<number | undefined>()
   })
