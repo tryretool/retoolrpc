@@ -112,7 +112,6 @@ class RetoolAPI:
             "User-Agent": f"RetoolRPC/{__version__} (Python)",
         }
         async with httpx.AsyncClient() as client:
-            print(options)
             response = await client.post(
                 url=f"{self._host_url}/api/v1/retoolrpc/postQueryResponse",
                 headers=headers,
