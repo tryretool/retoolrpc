@@ -15,6 +15,7 @@ export async function loopWithBackoff(
   pollingIntervalMs: number,
   logger: LoggerService,
   callback: () => Promise<AgentServerStatus>,
+  onError?: (error: unknown) => Promise<void>,
 ): Promise<AgentServerStatus> {
   let delayTimeMs = CONNECTION_ERROR_INITIAL_TIMEOUT_MS
   let lastLoopTimestamp = Date.now()
@@ -36,9 +37,13 @@ export async function loopWithBackoff(
       await sleep(pollingIntervalMs)
       delayTimeMs = Math.max(delayTimeMs / 2, CONNECTION_ERROR_INITIAL_TIMEOUT_MS)
     } catch (err: unknown) {
-      logger.error('Error running RPC agent', err)
-      await sleep(delayTimeMs)
-      delayTimeMs = Math.min(delayTimeMs * 2, CONNECTION_ERROR_RETRY_MAX_MS)
+      logger.debug('Error running RPC agent', err)
+      if (onError) {
+        await onError(err)
+      } else {
+        await sleep(delayTimeMs)
+        delayTimeMs = Math.min(delayTimeMs * 2, CONNECTION_ERROR_RETRY_MAX_MS)
+      }
     }
   }
 }

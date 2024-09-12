@@ -76,13 +76,13 @@ export class RetoolRPC {
   /**
    * Asynchronously starts listening for incoming Retool function invocations.
    */
-  async listen(): Promise<void> {
+  async listen(onError?: (error: unknown) => Promise<void>): Promise<void> {
     this._logger.info('Starting RPC agent')
     const registerResult = await loopWithBackoff(this._pollingIntervalMs, this._logger, () => this.registerAgent())
     if (registerResult === 'done') {
       this._logger.info('Agent registered')
       this._logger.info('Starting processing query')
-      loopWithBackoff(this._pollingIntervalMs, this._logger, () => this.fetchQueryAndExecute())
+      loopWithBackoff(this._pollingIntervalMs, this._logger, () => this.fetchQueryAndExecute(), onError)
     }
   }
 
