@@ -10,9 +10,9 @@ const commonjsPkgJSONPlugin = () => {
       if (isCJSBuild === true) {
         fs.writeJsonSync(
           'dist/cjs/package.json',
-          JSON.stringify({
-            type: 'commonjs',
-          }),
+            {
+              type: 'commonjs',
+            }
         )
       } else {
         await fs.copyFile('package.json', 'dist/package.json')
