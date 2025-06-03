@@ -23,7 +23,7 @@ src = ["retoolrpc"]
 [tool.poetry.dependencies]
 python = "^3.10"
 asyncio = "^3.4.3"
-httpx = "^0.25.0"
+httpx = ">=0.25.0,<1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.5.1"
