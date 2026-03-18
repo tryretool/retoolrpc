@@ -1,6 +1,6 @@
 {
   "name": "retoolrpc",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "TypeScript package for Retool RPC",
   "keywords": [],
   "homepage": "https://github.com/tryretool/retoolrpc#readme",

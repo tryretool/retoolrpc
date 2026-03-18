@@ -7,6 +7,10 @@ type RegisterModelArgs = {
   readAttributes?: string[]
   writeAttributes?: string[]
   findByAttributes?: string[]
+  permissions?: {
+    groupNames?: string[]
+    userEmails?: string[]
+  }
 }
 
 export declare class MyMixinInterface {
@@ -35,6 +39,7 @@ function registerModel({
   readAttributes,
   writeAttributes,
   findByAttributes,
+  permissions,
 }: RegisterModelArgs & { rpc: RetoolRPC }) {
   const modelName = capitalize(model.name)
   // this will give us not just the name of the attribute, but also their type
@@ -57,6 +62,7 @@ function registerModel({
   rpc.register({
     name: `${modelName} > create`,
     arguments: writeAttributeArgs,
+    permissions,
     implementation: async (args) => {
       if (typeof args !== 'object' || Array.isArray(args)) {
         throw 'attributes must be an object'
@@ -76,6 +82,7 @@ function registerModel({
       primaryKey: { type: 'string', required: true },
       ...writeAttributeArgs,
     },
+    permissions,
     implementation: async ({ primaryKey, ...attributes }) => {
       return model.update(attributes, {
         where: {
@@ -91,6 +98,7 @@ function registerModel({
       findAttributes: { type: 'dict', required: true },
       ...writeAttributeArgs,
     },
+    permissions,
     implementation: async ({ findAttributes, ...writeAttributes }) => {
       // Note: this is susceptible to race condition if there is no unique index
       // on the find attributes. It's the user's responsibility to avoid
@@ -115,6 +123,7 @@ function registerModel({
       offset: { type: 'number' },
       limit: { type: 'number' },
     },
+    permissions,
     implementation: async ({ offset, limit }) => {
       return model.findAll({
         attributes: readAttributes,
@@ -130,6 +139,7 @@ function registerModel({
     arguments: {
       primaryKey: { type: 'string', required: true },
     },
+    permissions,
     implementation: async ({ primaryKey }) => {
       return model.findByPk(primaryKey, {
         attributes: readAttributes,
@@ -141,6 +151,7 @@ function registerModel({
   rpc.register({
     name: `${modelName} > findBy`,
     arguments: findByAttributeArgs,
+    permissions,
     implementation: async (attributesValues) => {
       return model.findAll({
         where: attributesValues,
