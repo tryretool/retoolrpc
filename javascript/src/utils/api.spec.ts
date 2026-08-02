@@ -39,10 +39,7 @@ describe('RetoolAPI', () => {
 
   // Regression for RE-2830: node-fetch@2 throws FetchError Premature close on some Node 24
   // gzip responses. Native fetch must consume a gzip registerAgent body cleanly.
-  // Node 18 under Vitest can take several seconds for a local fetch round-trip.
-  test(
-    'registerAgent consumes a gzip Content-Encoding response body',
-    async () => {
+  test('registerAgent consumes a gzip Content-Encoding response body', async () => {
       const payload = JSON.stringify({ versionHash: 'gzip-version-hash' })
       const gzipBody = zlib.gzipSync(payload)
 
@@ -88,11 +85,10 @@ describe('RetoolAPI', () => {
         expect(response.ok).toBe(true)
         await expect(response.json()).resolves.toEqual({ versionHash: 'gzip-version-hash' })
       } finally {
+        server.closeAllConnections()
         await new Promise<void>((resolve, reject) => {
           server.close((error) => (error ? reject(error) : resolve()))
         })
       }
-    },
-    20_000,
-  )
+    })
 })
