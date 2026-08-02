@@ -2,6 +2,8 @@
 
 Review Retool's [RPC documentation](https://docs.retool.com/docs/retool-rpc) before installing the JavaScript package.
 
+Requires Node.js 18 or later (uses the runtime `fetch` API).
+
 ## Installation
 
 You can use `npm`, `yarn`, or `pnpm` to install the package.
