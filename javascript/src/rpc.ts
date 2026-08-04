@@ -179,7 +179,7 @@ export class RetoolRPC {
       )
     }
 
-    const { versionHash } = await registerAgentResponse.json()
+    const { versionHash } = (await registerAgentResponse.json()) as { versionHash: string }
     this._versionHash = versionHash
     this._logger.info(`Agent registered with versionHash: ${versionHash}`)
 
@@ -206,7 +206,16 @@ export class RetoolRPC {
       throw new Error(`Server error when fetching query: ${pendingQueryFetch.status}. Retrying...`)
     }
 
-    const { query } = await pendingQueryFetch.json()
+    const { query } = (await pendingQueryFetch.json()) as {
+      query: {
+        queryUuid: string
+        queryInfo: {
+          method: string
+          parameters: Record<string, unknown>
+          context: RetoolContext
+        }
+      } | null
+    }
     if (query) {
       this._logger.debug('Executing query', query) // This might contain sensitive information
 

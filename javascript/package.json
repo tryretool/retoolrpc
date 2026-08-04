@@ -1,6 +1,6 @@
 {
   "name": "retoolrpc",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "description": "TypeScript package for Retool RPC",
   "keywords": [],
   "homepage": "https://github.com/tryretool/retoolrpc#readme",
@@ -12,6 +12,9 @@
     "url": "git+https://github.com/tryretool/retoolrpc.git"
   },
   "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
   "main": "./dist/cjs/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -34,21 +37,18 @@
     "test:api": "tsc --project tsconfig.json"
   },
   "dependencies": {
-    "abort-controller": "^3.0.0",
-    "node-fetch": "^2.6",
     "ts-dedent": "^2.2.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.2.0",
     "@types/fs-extra": "^11.0.1",
-    "@types/node": "15.12.1",
-    "@types/node-fetch": "^2.6.4",
+    "@types/node": "^18.19.0",
     "@types/semver": "^7.5.1",
     "@types/uuid": "^9.0.2",
     "cross-env": "7.0.3",
     "fs-extra": "^11.1.1",
-    "nock": "^13.3.2",
+    "nock": "^14.0.17",
     "nodemon": "^2.0.15",
     "prettier": "2.3.1",
     "rollup": "^2.39.0",

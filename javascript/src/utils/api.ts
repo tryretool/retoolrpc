@@ -1,12 +1,7 @@
-import fetch, { RequestInit } from 'node-fetch'
-
-import AbortControllerFallback from 'abort-controller'
-
-// AbortController was added in node v14.17.0 globally, but we need to polyfill it for older versions
-const AbortController = globalThis.AbortController || AbortControllerFallback
-
 import { AgentServerError } from '../types'
 import { RetoolRPCVersion } from '../version'
+
+// Runtime global fetch. node-fetch@2 fails on some Node 24.x gzip responses with Premature close.
 
 type PopQueryRequest = {
   resourceId: string
@@ -67,9 +62,7 @@ export class RetoolAPI {
           'User-Agent': `RetoolRPC/${RetoolRPCVersion} (Javascript)`,
         },
         body: JSON.stringify(options),
-        // Had to cast to RequestInit['signal'] because of a bug in the types
-        // https://github.com/jasonkuhrt/graphql-request/issues/481
-        signal: abortController.signal as RequestInit['signal'],
+        signal: abortController.signal,
       })
     } catch (error: any) {
       if (abortController.signal.aborted) {
